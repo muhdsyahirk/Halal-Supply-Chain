@@ -4,27 +4,23 @@ pragma solidity ^0.8.0;
 
 contract HalalSupplyChain {
 
+    enum Role {None, Farmer, Slaughterer, Distributor, Retailer}
+
     struct UserDetail {
         bool isRegistered;
         bool isLoggedIn;
-        string job;
+        Role role;
     }
 
     mapping(address => UserDetail) public users;
-
-    // Events to log actions and for front-end applications to listen to
-    // event UserRegistered(address indexed userAddress);
-    // event UserLoggedIn(address indexed userAddress);
-    // event UserLoggedOut(address indexed userAddress);
     
-    function registerUser(string memory _job) public {
+    function registerUser(Role _role) public {
         require(!users[msg.sender].isRegistered, "User already registered");
 
         users[msg.sender].isRegistered = true;
         users[msg.sender].isLoggedIn = false;
-        users[msg.sender].job = _job;
+        users[msg.sender].role = _role;
 
-        // emit UserRegistered(msg.sender);
     }
 
     function login() public {
@@ -33,7 +29,6 @@ contract HalalSupplyChain {
 
         users[msg.sender].isLoggedIn = true;
 
-        // emit UserLoggedIn(msg.sender);
     }
 
     function logout() public {
@@ -42,7 +37,6 @@ contract HalalSupplyChain {
 
         users[msg.sender].isLoggedIn = false;
 
-        // emit UserLoggedOut(msg.sender);
     }
 
     function checkLoginStatus(address userAddress) public view returns (bool) {
@@ -54,15 +48,54 @@ contract HalalSupplyChain {
     // 
 
     struct Flow {
+        address updatedBy;
         uint256 timestamp;
         string location;
         string content;
     }
 
-    Flow[] public flows;
+    mapping(uint256 => Flow[]) public flows;
+    uint256 public batchID;
 
-    function initialiseBatch(uint256 _timestamp, string memory _location, string memory _content) external onlyFarmer {
+    modifier onlyFarmer(){
+        require(users[msg.sender].role == Role.Farmer, "Only farmer allowed");
+        _;
+    }
+
+    function initialiseBatch(
+        string memory _location, 
+        string memory _content) external onlyFarmer {
         
+        flows[batchID].push(
+            Flow({
+                timestamp: block.timestamp,
+                location: _location,
+                content: _content,
+                updatedBy: msg.sender
+            })
+        );
+        batchID++;    
+    }
+
+    function addFlow(
+        uint256 _batchID,
+        string memory _location,
+        string memory _content) external {
+
+        require(flows[_batchID].length > 0, "Batch does not exist");
+
+        flows[_batchID].push(
+            Flow({
+                timestamp: block.timestamp,
+                location: _location,
+                content: _content,
+                updatedBy: msg.sender
+            })
+        );
+    }
+
+    function getAllFlows(uint256 _batchID) external view returns (Flow[] memory) {
+        return flows[_batchID];
     }
 
 }
