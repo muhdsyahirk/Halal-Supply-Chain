@@ -134,18 +134,22 @@ body {
 .worker {
   /* display: flex; */
   justify-content: center;
+  align-items: center;
   display: none;
+  min-height: 100vh;
 
   .worker-container {
     display: flex;
     flex-direction: column;
-    margin: 30px;
+    margin: 50px;
     gap: 20px;
+    width: 80%;
+    align-items: center;
 
     .worker-address {
       color: var(--white);
       font-size: 20px;
-      text-align: center;
+      /* text-align: center; */
     }
 
     .worker-role-register {
@@ -173,7 +177,95 @@ body {
     .worker-role {
       color: var(--white);
       font-size: 18px;
-      text-align: center;
+      /* text-align: center; */
+    }
+
+    .worker-dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      border: 1px solid var(--green);
+      border-radius: 15px;
+      background-color: var(--black);
+      padding: 40px;
+      width: 70%;
+
+      p {
+        color: var(--white);
+        font-size: 38px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .dashboard-content {
+        display: flex;
+        justify-content: space-evenly;
+        gap: 10px;
+
+        .dashboard-content-create {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          width: 50%;
+
+          p {
+            font-size: 20px;
+            font-weight: 100;
+          }
+
+          form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            input {
+              background-color: transparent;
+              border: 1px solid var(--green);
+              padding: 10px;
+              border-radius: 9px;
+              color: var(--white);
+            }
+
+            textarea {
+              background-color: transparent;
+              border: 1px solid var(--green);
+              padding: 10px;
+              border-radius: 9px;
+              height: 150px;
+              color: var(--white);
+            }
+
+            button {
+              background-color: var(--green);
+              border: 1px solid var(--green);
+              padding: 10px;
+              border-radius: 9px;
+              color: var(--black);
+              transition: 0.5s;
+
+              &:hover {
+                cursor: pointer;
+                color: var(--white);
+                background-color: transparent;
+              }
+            }
+          }
+        }
+
+        .batch-qr {
+          width: 50%;
+          color: var(--white);
+
+          p {
+            font-size: 20px;
+            font-weight: 100;
+            color: var(--white);
+          }
+          a {
+            color: var(--white);
+          }
+        }
+      }
     }
   }
 }
